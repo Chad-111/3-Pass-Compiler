@@ -1,123 +1,69 @@
-# 3-Pass Compiler
+# Three-Pass Compiler with Microservice Architecture
 
-Microservice Architecture Development of a Three-Pass Compiler
+## Overview
 
-## Phase 1: Planning and Design
+A three-pass compiler for a C++ language subset, implemented using microservices for Lexical Analysis, Parsing, and Code Generation.
 
-##### Define Language Subset
+## Supported Language Features
 
-    > Clearly document the subset of C++ language features you’ll support. This should include:
-        - Data types
-            - int, float, char, bool.
-        - Operators
-            - Arithmetic (+, -, *, /)
-            - Logical (&&, ||, !)
-            - Comparison (==, !=, >, <, <=, >=)
-        - Control structures
-            - if statements, for loops, while loops.
-        - Functions
-            - Simple function definitions and calls, basic return values.
-        - Input/Output
-            - cin, cout.
+- **Data Types:** `int`, `float`, `char`, `bool`
+- **Operators:** Arithmetic (`+`, `-`, `*`, `/`), Logical (`&&`, `||`, `!`), Comparison (`==`, `!=`, `>`, `<`, `<=`, `>=`)
+- **Control Structures:** `if`, `for`, `while`
+- **Functions:** Basic function definitions, calls, and return values
+- **I/O:** `cin`, `cout`
 
-##### System Architecture Design
+## System Design
 
-    > Finalize the architecture diagram showing each microservice’s role (Lexical Analysis, Parsing, Code Generation) and how data flows between them.
-    > Document each microservice's API specifications, including endpoints, input/output formats, and data flow.
+### Architecture
+- **Microservices:** 
+  - **Lexical Analysis:** Tokenizer that breaks source code into tokens.
+  - **Parsing:** Constructs an Abstract Syntax Tree (AST) from tokens.
+  - **Code Generation:** Converts the AST into machine code or assembly-like instructions.
+- **Communication:** TCP-based communication between services using JSON for data exchange.
 
-##### Error Handling Strategy
+### Error Handling
+- **Lexical Analysis:** Illegal tokens, unrecognized symbols
+- **Parsing:** Unmatched braces, missing semicolons, undefined variables
+- **Code Generation:** Unsupported constructs, undefined operations, memory issues
+- **Standardized Messages:** Consistent and clear error feedback across services
 
-    > Define an error-handling approach for each phase:
-        - Lexical Analysis Errors (Tokenizer)
-            - Illegal tokens, unrecognized symbols, improper syntax.
-        - Parsing Errors (AST)
-            - Unmatched braces, missing semi-colons, undefined variable references.
-        - Code Generation Errors (Assembly Generator)
-            - Unsupported constructs, undefined operations, memory issues.
-    > Ensure error messages are clear and standardized across services.
+## Development Environment
 
-##### Development Tools and Language Choice
+- **Language:** Go
+- **Containerization:** Docker with Docker Compose
+- **Networking:** TCP sockets for inter-service communication
 
-    > Confirm development language for each microservice API
-        - Go.
-    > Confirm Docker setup is appropriate for each microservice.
-        - Yes.
-    > Choose Infrastructure as Code (IaC) tool(s) like Docker Compose, Terraform, or Ansible for deployment.
-        - Docker Compose.
+## Phases
 
-##### Infrastructure as Code (IaC) Planning
+### Phase 1: Planning and Design
+- Define language subset
+- Design architecture diagram and API specifications
+- Establish error-handling strategy and standard messages
 
-    > Plan Docker networking to ensure each microservice can communicate using TCP sockets.
-    > Draft Docker Compose file or Terraform configuration to manage the orchestration.
+### Phase 2: Microservice Development
+- **Lexical Analysis:** Develop tokenizer, create API endpoint, and containerize
+- **Parsing:** Construct AST, create API endpoint, and containerize
+- **Code Generation:** Generate machine code, create API endpoint, and containerize
 
-## Phase 2: Microservice Development
+### Phase 3: Networking and Communication
+- Finalize Docker network and test TCP-based inter-service communication
+- Ensure consistent JSON format for data exchange
 
-##### Lexical Analysis Microservice
+### Phase 4: Orchestration and Deployment
+- Use Docker Compose for automated deployment and setup across platforms
+- Document IaC setup, including volumes, environment variables, and port mappings
 
-    > Develop a tokenizer that breaks down source code into tokens based on the language subset.
-    > Create an API endpoint that accepts source code input and outputs tokens as a JSON object.
-    > Write a Dockerfile and containerize the Lexical Analysis microservice.
+### Phase 5: User Interface and Testing
+- **Interface:** CLI or web API client for submitting source code and retrieving compiled output
+- **Testing:** Validate performance (compilation within five seconds) and consistency of error messages
+- **Documentation:** Provide usage instructions, API details, and troubleshooting guidance
 
-##### Parsing Microservice
+## Getting Started
 
-    > Build a parser that constructs an Abstract Syntax Tree (AST) from tokens, following C++ grammar rules.
-    > Create an API endpoint that accepts tokens as input and returns the AST as JSON.
-    > Write a Dockerfile and containerize the Parsing microservice.
+1. **Setup:** Clone the repository, install Docker, and run `docker-compose up` to start all services.
+2. **Usage:** Submit code via the interface, check for errors, and retrieve final machine code output.
+3. **Documentation:** Refer to detailed API docs for each service and deployment instructions.
 
-##### Code Generation Microservice
+## Contact and Support
 
-    > Develop code generation logic that converts the AST into machine code or assembly-like instructions.
-    > Create an API endpoint that accepts an AST and returns the generated machine code.
-    > Write a Dockerfile and containerize the Code Generation microservice.
-
-##### Networking and Communication Testing
-
-    > Set up a Docker network for inter-service communication using TCP.
-    > Test socket-based communication between each service (token transfer, AST transfer).
-
-## Phase 3: Container Communication and Networking
-
-##### Network Configuration
-
-    > Finalize and test the Docker network setup, ensuring all microservices can communicate over TCP.
-
-##### Inter-Service API Communication
-
-    > Implement inter-service data transfer using network sockets (e.g., sending tokens from Lexical Analysis to Parsing).
-    > Verify JSON data format consistency between microservices and troubleshoot any serialization issues.
-
-##### Integration Testing
-
-    > Test end-to-end compilation from source code input to final machine code output across all three services.
-    > Validate error handling between services, checking that each phase reports errors back to the user correctly.
-
-## Phase 4: Orchestration and Deployment Automation
-
-##### Infrastructure as Code (IaC) Setup
-
-    > Use Docker Compose, Terraform, or Ansible to automate container deployment and teardown.
-    > Configure volumes, environment variables, and port mappings in Docker Compose or Terraform.
-
-##### Platform Testing
-
-    > Test deployment across different operating systems (Windows, macOS, Linux) with Docker installed to ensure platform independence.
-
-##### Documentation of Deployment Process
-
-    > Document deployment and teardown instructions using IaC tools, making it easy for users to set up the compiler on any Docker-compatible system.
-
-## Phase 5: User Interface and Testing
-
-##### User Interface Setup
-
-    > Develop a basic interface (CLI, web, or API client) for users to submit source code, trigger compilation, and download the final machine code output.
-
-##### Functional and Performance Testing
-
-    > Run tests with varying input code sizes (50-500 lines) to ensure the compilation process completes within the five-second requirement.
-    > Check error messages for clarity, consistency, and usability.
-
-##### Documentation
-
-    > Write documentation on using the compiler, setting up the environment, API usage, and troubleshooting.
-    > Finalize API documentation for each service, describing endpoints, data formats, and error messages.
+For setup issues or questions, refer to the documentation or submit issues via GitHub.
