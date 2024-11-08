@@ -1,0 +1,25 @@
+services:
+  lexical:
+    build: ./lexical-analysis
+    ports:
+      - "8081:8081"
+    networks:
+      - compiler-network
+
+  parsing:
+    build: ./parsing
+    ports:
+      - "8082:8082"
+    networks:
+      - compiler-network
+
+  codegen:
+    build: ./code-generation
+    ports:
+      - "8083:8083"
+    networks:
+      - compiler-network
+
+networks:
+  compiler-network:
+    driver: bridge
